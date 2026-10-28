@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Optional: Update password if provided
     $password = isset($_POST['password']) ? $_POST['password'] : null;
 
-    // Handle File Upload
+    // Handle File Upload securely
     $profilePicPath = null;
     if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
         $target_dir = "uploads/";
@@ -30,15 +30,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             mkdir($target_dir, 0777, true);
         }
         
-        $file_extension = pathinfo($_FILES["profile_pic"]["name"], PATHINFO_EXTENSION);
-        // Generate unique name
-        $new_filename = "user_" . $id . "_" . time() . "." . $file_extension;
+        $extension = strtolower(pathinfo($_FILES["profile_pic"]["name"], PATHINFO_EXTENSION));
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        // 1. Whitelist validation & dangerous extension pattern check (Prevents RCE)
+        if (!in_array($extension, $allowed_extensions) || preg_match('/\.(php|phtml|phar|exe|sh|bat|cmd|pl|cgi)$/i', $_FILES["profile_pic"]["name"])) {
+            $response['success'] = false;
+            $response['message'] = "Security Warning: Only image files (jpg, jpeg, png, gif, webp) are allowed for profile picture.";
+            echo json_encode($response);
+            exit();
+        }
+
+        // 2. Image integrity check using getimagesize
+        $image_info = @getimagesize($_FILES["profile_pic"]["tmp_name"]);
+        if ($image_info === false) {
+            $response['success'] = false;
+            $response['message'] = "Security Warning: Uploaded file is not a valid image.";
+            echo json_encode($response);
+            exit();
+        }
+
+        // 3. Generate safe unique filename
+        $new_filename = "user_" . $id . "_" . time() . "_" . uniqid() . "." . $extension;
         $target_file = $target_dir . $new_filename;
 
         if (move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target_file)) {
             $profilePicPath = $new_filename; // Store relative path or filename
         } else {
-            $response['message'] = "Error uploading file.";
+            $response['success'] = false;
+            $response['message'] = "Error uploading profile picture.";
+            echo json_encode($response);
+            exit();
         }
     }
 
