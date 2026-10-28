@@ -1,0 +1,11 @@
+{
+    "java.project.sourcePaths": ["app/src/main/java"],
+    "java.errors.incompleteClasspath.severity": "ignore",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.import.gradle.enabled": true,
+    "java.project.referencedLibraries": [
+        "C:/Users/Abi/AppData/Local/Android/Sdk/platforms/android-34/android.jar",
+        "app/build/intermediates/**/*.jar",
+        "C:/Users/Abi/.gradle/caches/modules-2/files-2.1/**/*.jar"
+    ]
+}

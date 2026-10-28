@@ -1,0 +1,230 @@
+[
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_upload_error.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_upload_error.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-xhdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-xhdpi\\ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-xxhdpi\\ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_bg_ptt_button_outer.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\bg_ptt_button_outer.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_wifi_direct.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_wifi_direct.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-xhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-xxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-mdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_bg_user_item.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\bg_user_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_item_message_sent.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\item_message_sent.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_login.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_upload.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_upload.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-mdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-mdpi\\ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-xxxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-xxxhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_item_message_received.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\item_message_received.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_profile.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_profile.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_input_add.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_input_add.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_stat_sys_upload.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_stat_sys_upload.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-xxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_menu_share.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_menu_share.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_menu_chat.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_menu_chat.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_bg_ptt_button_inner.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\bg_ptt_button_inner.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_bg_chat_input.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\bg_chat_input.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_admin_dashboard.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_admin_dashboard.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_chat.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_chat.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-hdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_lock_power_off.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_lock_power_off.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-xxxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-xxxhdpi\\ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_menu_search.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_menu_search.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_user_list.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_user_list.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_menu_myplaces.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_menu_myplaces.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_item_user.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\item_user.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_stat_sys_speakerphone.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_stat_sys_speakerphone.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_bg_circle_cyan.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\bg_circle_cyan.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_employee_dashboard.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_employee_dashboard.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_walkie_talkie.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_walkie_talkie.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_bg_message_received.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\bg_message_received.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_menu_revert.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_menu_revert.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_bg_message_sent.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\bg_message_sent.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_splash.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_splash.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_create_user.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_create_user.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\layout_activity_file_transfer.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\layout\\activity_file_transfer.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-hdpi_ic_launcher_foreground.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-hdpi\\ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_bg_circle_gray.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\bg_circle_gray.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_stat_sys_download.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_stat_sys_download.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_menu_send.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_menu_send.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_menu_gallery.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_menu_gallery.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.wifitalkie.app-debug-33:/layout_activity_login.xml.flat",
+        "source": "com.example.wifitalkie.app-main-35:/layout/activity_login.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_btn_speak_now.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_btn_speak_now.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-hdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-xhdpi\\ic_launcher_round.webp"
+    },
+    {
+        "merged": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-debug-33:\\mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "C:\\Users\\Abi\\.gradle\\daemon\\8.4\\com.example.wifitalkie.app-main-35:\\mipmap-mdpi\\ic_launcher_round.webp"
+    }
+]

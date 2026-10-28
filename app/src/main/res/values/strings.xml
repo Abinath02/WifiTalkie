@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">WifiTalkie</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="welcome_admin">Welcome Admin</string>
+    <string name="create_employee">Create Employee</string>
+    <string name="find_devices">Find Devices</string>
+    <string name="profile">Profile</string>
+    <string name="welcome_employee">Welcome Employee</string>
+    <string name="create_account_title">Create Employee Account</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="last_name_hint">Last Name</string>
+    <string name="nic_hint">NIC Number</string>
+    <string name="dob_hint">Date of Birth (DD/MM/YYYY)</string>
+    <string name="create_account_btn">Create Account</string>
+</resources>
