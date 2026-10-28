@@ -29,6 +29,10 @@ public class NetworkDiscoveryManager {
     private final List<DiscoveredPeer> discoveredPeers = new CopyOnWriteArrayList<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
 
+    // Sequential resolution queue to avoid NsdManager.FAILURE_ALREADY_ACTIVE (error 3)
+    private final java.util.Queue<NsdServiceInfo> resolveQueue = new java.util.LinkedList<>();
+    private boolean isResolving = false;
+
     public interface DiscoveryListener {
         void onPeersChanged(List<DiscoveredPeer> peers);
     }
@@ -85,6 +89,10 @@ public class NetworkDiscoveryManager {
 
     public void stopDiscovery() {
         stopCleanupTask();
+        synchronized (resolveQueue) {
+            resolveQueue.clear();
+            isResolving = false;
+        }
         try {
             if (nsdManager != null) {
                 if (registrationListener != null) {
@@ -162,36 +170,87 @@ public class NetworkDiscoveryManager {
                 } else if (serviceInfo.getServiceName().equals(serviceName)) {
                     Log.d(TAG, "Same machine: " + serviceName);
                 } else if (serviceInfo.getServiceName().contains("WifiTalkie_")) {
-                    nsdManager.resolveService(serviceInfo, new NsdManager.ResolveListener() {
-                        @Override
-                        public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
-                            Log.e(TAG, "Resolve failed: " + errorCode + ". User should check Wi-Fi connection.");
-                            // Retry once after a short delay
-                            handler.postDelayed(() -> {
-                                try {
-                                    nsdManager.resolveService(serviceInfo, this);
-                                } catch (Exception ignored) {
-                                }
-                            }, 2000);
-                        }
-
-                        @Override
-                        public void onServiceResolved(NsdServiceInfo resolvedInfo) {
-                            Log.d(TAG, "Resolve Succeeded. " + resolvedInfo.getHost());
-                            handleServiceResolved(resolvedInfo);
-                        }
-                    });
+                    enqueueServiceResolution(serviceInfo);
                 }
             }
 
             @Override
             public void onServiceLost(NsdServiceInfo serviceInfo) {
                 Log.e(TAG, "service lost " + serviceInfo);
+                synchronized (resolveQueue) {
+                    resolveQueue.removeIf(s -> s.getServiceName().equals(serviceInfo.getServiceName()));
+                }
                 removePeerByServiceName(serviceInfo.getServiceName());
             }
         };
 
         nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
+    }
+
+    private void enqueueServiceResolution(NsdServiceInfo serviceInfo) {
+        synchronized (resolveQueue) {
+            for (NsdServiceInfo queued : resolveQueue) {
+                if (queued.getServiceName().equals(serviceInfo.getServiceName())) {
+                    return; // Already waiting in queue
+                }
+            }
+            resolveQueue.add(serviceInfo);
+            resolveNextInQueue();
+        }
+    }
+
+    private void resolveNextInQueue() {
+        synchronized (resolveQueue) {
+            if (isResolving || resolveQueue.isEmpty() || nsdManager == null) {
+                return;
+            }
+
+            NsdServiceInfo nextService = resolveQueue.poll();
+            if (nextService == null) {
+                return;
+            }
+
+            isResolving = true;
+            try {
+                nsdManager.resolveService(nextService, new NsdManager.ResolveListener() {
+                    @Override
+                    public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                        Log.e(TAG, "Resolve failed for " + serviceInfo.getServiceName() + ": " + errorCode);
+                        finishResolve(false, serviceInfo, errorCode);
+                    }
+
+                    @Override
+                    public void onServiceResolved(NsdServiceInfo resolvedInfo) {
+                        Log.d(TAG, "Resolve Succeeded: " + resolvedInfo.getHost());
+                        handleServiceResolved(resolvedInfo);
+                        finishResolve(true, resolvedInfo, 0);
+                    }
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "Exception initiating resolveService", e);
+                finishResolve(false, nextService, -1);
+            }
+        }
+    }
+
+    private void finishResolve(boolean success, NsdServiceInfo serviceInfo, int errorCode) {
+        // If failed with FAILURE_ALREADY_ACTIVE (error 3), re-enqueue after a small backoff delay
+        if (!success && errorCode == NsdManager.FAILURE_ALREADY_ACTIVE) {
+            handler.postDelayed(() -> {
+                synchronized (resolveQueue) {
+                    resolveQueue.add(serviceInfo);
+                    resolveNextInQueue();
+                }
+            }, 600);
+        }
+
+        // Release lock on handler thread and trigger next resolution
+        handler.post(() -> {
+            synchronized (resolveQueue) {
+                isResolving = false;
+                resolveNextInQueue();
+            }
+        });
     }
 
     private synchronized void handleServiceResolved(NsdServiceInfo info) {

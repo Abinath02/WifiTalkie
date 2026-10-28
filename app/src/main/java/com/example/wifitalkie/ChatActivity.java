@@ -415,9 +415,14 @@ public class ChatActivity extends AppCompatActivity {
                 bb.putInt(receiverId);
                 bb.put((byte) (isGroup ? 1 : 0));
                 byte[] d = bb.array();
-                java.net.DatagramPacket packet = new java.net.DatagramPacket(d, d.length,
-                        java.net.InetAddress.getByName("255.255.255.255"), 50005);
-                socket.send(packet);
+
+                List<java.net.InetAddress> broadcastAddresses = com.example.wifitalkie.util.NetworkUtils.getBroadcastAddresses();
+                for (java.net.InetAddress bAddr : broadcastAddresses) {
+                    try {
+                        java.net.DatagramPacket packet = new java.net.DatagramPacket(d, d.length, bAddr, 50005);
+                        socket.send(packet);
+                    } catch (Exception ignored) {}
+                }
             } catch (Exception ignored) {}
         }).start();
     }

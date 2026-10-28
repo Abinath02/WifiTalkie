@@ -468,30 +468,7 @@ public class AudioService extends Service {
     }
 
     private List<InetAddress> getBroadcastAddresses() {
-        List<InetAddress> addresses = new ArrayList<>();
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface networkInterface = interfaces.nextElement();
-                if (networkInterface.isLoopback() || !networkInterface.isUp())
-                    continue;
-
-                for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
-                    InetAddress broadcast = interfaceAddress.getBroadcast();
-                    if (broadcast != null) {
-                        addresses.add(broadcast);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting broadcast addresses", e);
-        }
-        if (addresses.isEmpty()) {
-            try {
-                addresses.add(InetAddress.getByName("255.255.255.255"));
-            } catch (UnknownHostException ignored) {}
-        }
-        return addresses;
+        return com.example.wifitalkie.util.NetworkUtils.getBroadcastAddresses();
     }
 
     private void startReceivingAudio() {
