@@ -388,11 +388,44 @@ public class ChatActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<MessagesResponse> call, @NonNull Response<MessagesResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     List<Message> newMessages = response.body().getMessages();
-                    if (newMessages != null && newMessages.size() != messageList.size()) {
+                    if (newMessages == null) return;
+
+                    boolean hasChanged = false;
+                    if (newMessages.size() != messageList.size()) {
+                        hasChanged = true;
+                    } else {
+                        for (int i = 0; i < newMessages.size(); i++) {
+                            Message m1 = messageList.get(i);
+                            Message m2 = newMessages.get(i);
+                            if (m1.getId() != m2.getId() ||
+                                    !java.util.Objects.equals(m1.getMessage(), m2.getMessage()) ||
+                                    !java.util.Objects.equals(m1.getFilePath(), m2.getFilePath())) {
+                                hasChanged = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (hasChanged) {
+                        androidx.recyclerview.widget.LinearLayoutManager layoutManager =
+                                (androidx.recyclerview.widget.LinearLayoutManager) chatRecyclerView.getLayoutManager();
+
+                        // Only auto-scroll if this is the initial load or if user is already at the bottom
+                        boolean shouldScrollToBottom = false;
+                        if (messageList.isEmpty()) {
+                            shouldScrollToBottom = true;
+                        } else if (layoutManager != null) {
+                            int lastVisiblePos = layoutManager.findLastCompletelyVisibleItemPosition();
+                            shouldScrollToBottom = (lastVisiblePos >= adapter.getItemCount() - 2);
+                        }
+
                         messageList.clear();
                         messageList.addAll(newMessages);
                         adapter.notifyDataSetChanged();
-                        chatRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
+
+                        if (shouldScrollToBottom && adapter.getItemCount() > 0) {
+                            chatRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                        }
                     }
                 }
             }
@@ -462,6 +495,7 @@ public class ChatActivity extends AppCompatActivity {
             unregisterReceiver(chatNotifReceiver);
         } catch (Exception ignored) {}
         handler.removeCallbacks(refreshRunnable);
+        com.example.wifitalkie.adapter.MessageAdapter.stopCurrentAudio();
     }
 
     @Override

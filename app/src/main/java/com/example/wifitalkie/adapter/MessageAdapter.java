@@ -30,6 +30,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private List<Message> messageList;
     private int currentUserId;
 
+    // Single active player to avoid memory leak and concurrent playback
+    private static MediaPlayer activeMediaPlayer = null;
+    private static String activePlayingUrl = null;
+
     public MessageAdapter(Context context, List<Message> messageList, int currentUserId) {
         this.context = context;
         this.messageList = messageList;
@@ -147,15 +151,73 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             return;
 
         String url = Constants.getBaseUrl(context) + "uploads/" + fileName;
-        MediaPlayer mediaPlayer = new MediaPlayer();
+
+        // If clicking the currently playing audio, stop it
+        if (activeMediaPlayer != null && url.equals(activePlayingUrl)) {
+            stopCurrentAudio();
+            Toast.makeText(context, "Audio stopped", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Release previous player if playing something else
+        stopCurrentAudio();
+
         try {
-            mediaPlayer.setDataSource(url);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-            Toast.makeText(context, "Playing Audio...", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
+            activeMediaPlayer = new MediaPlayer();
+            activePlayingUrl = url;
+
+            activeMediaPlayer.setAudioAttributes(
+                    new android.media.AudioAttributes.Builder()
+                            .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SPEECH)
+                            .setUsage(android.media.AudioAttributes.USAGE_MEDIA)
+                            .build());
+
+            activeMediaPlayer.setDataSource(url);
+
+            activeMediaPlayer.setOnPreparedListener(mp -> {
+                try {
+                    mp.start();
+                    Toast.makeText(context, "Playing audio...", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    stopCurrentAudio();
+                }
+            });
+
+            activeMediaPlayer.setOnCompletionListener(mp -> stopCurrentAudio());
+
+            activeMediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                stopCurrentAudio();
+                Toast.makeText(context, "Cannot play audio", Toast.LENGTH_SHORT).show();
+                return true;
+            });
+
+            // Asynchronous preparation to completely prevent UI freeze / ANR
+            activeMediaPlayer.prepareAsync();
+            Toast.makeText(context, "Loading audio...", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
             e.printStackTrace();
+            stopCurrentAudio();
             Toast.makeText(context, "Cannot play audio", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Stop audio and release hardware codec resources to prevent memory leaks
+     */
+    public static void stopCurrentAudio() {
+        if (activeMediaPlayer != null) {
+            try {
+                if (activeMediaPlayer.isPlaying()) {
+                    activeMediaPlayer.stop();
+                }
+            } catch (Exception ignored) {}
+            try {
+                activeMediaPlayer.reset();
+                activeMediaPlayer.release();
+            } catch (Exception ignored) {}
+            activeMediaPlayer = null;
+            activePlayingUrl = null;
         }
     }
 }

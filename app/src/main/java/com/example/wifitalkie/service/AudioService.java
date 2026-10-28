@@ -75,6 +75,7 @@ public class AudioService extends Service {
     private static final byte PACKET_TYPE_PTT_CONTROL = 1;
     private static final byte PACKET_TYPE_AUDIO = 2;
     private static final byte PACKET_TYPE_CHAT_NOTIF = 3;
+    private static final byte PACKET_TYPE_ENCRYPTED_AUDIO = 4;
 
     public static final byte CONTROL_ACTION_START = 1;
     public static final byte CONTROL_ACTION_STOP = 2;
@@ -416,12 +417,20 @@ public class AudioService extends Service {
     private void sendAudioPacket(byte[] audioData, int length, int senderId, long seq) {
         senderExecutor.execute(() -> {
             try {
-                ByteBuffer bb = ByteBuffer.allocate(1 + 1 + 4 + 8 + length);
+                // End-to-end AES-256 CTR Voice Encryption
+                byte[] iv = com.example.wifitalkie.util.CryptoUtils.generateRandomIv();
+                byte[] encryptedAudio = com.example.wifitalkie.util.CryptoUtils.encrypt(audioData, 0, length, iv);
+                if (encryptedAudio == null) {
+                    return;
+                }
+
+                ByteBuffer bb = ByteBuffer.allocate(1 + 1 + 4 + 8 + 16 + encryptedAudio.length);
                 bb.put(MAGIC_HEADER);
-                bb.put(PACKET_TYPE_AUDIO);
+                bb.put(PACKET_TYPE_ENCRYPTED_AUDIO);
                 bb.putInt(senderId);
                 bb.putLong(seq);
-                bb.put(audioData, 0, length);
+                bb.put(iv);
+                bb.put(encryptedAudio);
 
                 byte[] data = bb.array();
                 dispatchPacket(data, data.length);
@@ -540,7 +549,26 @@ public class AudioService extends Service {
                                     notifyFloorChanged(false, -1, null);
                                 }
                             }
+                        } else if (type == PACKET_TYPE_ENCRYPTED_AUDIO && len > 30) {
+                            ByteBuffer bb = ByteBuffer.wrap(data, 2, 28);
+                            int senderId = bb.getInt();
+                            long seq = bb.getLong();
+                            byte[] iv = new byte[16];
+                            bb.get(iv);
+
+                            currentSpeakerId = senderId;
+                            lastSpeakerTimestamp = System.currentTimeMillis();
+
+                            if (seq >= lastReceivedSequence || (lastReceivedSequence - seq) < 5) {
+                                lastReceivedSequence = Math.max(lastReceivedSequence, seq);
+                                int cipherLen = len - 30;
+                                byte[] decryptedAudio = com.example.wifitalkie.util.CryptoUtils.decrypt(data, 30, cipherLen, iv);
+                                if (decryptedAudio != null) {
+                                    track.write(decryptedAudio, 0, decryptedAudio.length);
+                                }
+                            }
                         } else if (type == PACKET_TYPE_AUDIO && len > 14) {
+                            // Legacy unencrypted packet fallback
                             ByteBuffer bb = ByteBuffer.wrap(data, 2, 12);
                             int senderId = bb.getInt();
                             long seq = bb.getLong();
@@ -606,6 +634,12 @@ public class AudioService extends Service {
 
             String rawFileName = dataInputStream.readUTF();
             long fileSize = dataInputStream.readLong();
+            boolean isEncrypted = dataInputStream.readBoolean();
+            byte[] fileIv = null;
+            if (isEncrypted) {
+                fileIv = new byte[16];
+                dataInputStream.readFully(fileIv);
+            }
 
             // 1. Path Traversal Protection: Strip any directory path components & illegal chars
             String fileName = new File(rawFileName).getName();
@@ -651,7 +685,16 @@ public class AudioService extends Service {
                 long lastProgressTime = 0;
 
                 while (totalRead < fileSize && (bytesRead = inputStream.read(buffer)) != -1) {
-                    fileOutputStream.write(buffer, 0, bytesRead);
+                    if (isEncrypted && fileIv != null) {
+                        byte[] decrypted = com.example.wifitalkie.util.CryptoUtils.decrypt(buffer, 0, bytesRead, fileIv);
+                        if (decrypted != null) {
+                            fileOutputStream.write(decrypted);
+                        } else {
+                            fileOutputStream.write(buffer, 0, bytesRead);
+                        }
+                    } else {
+                        fileOutputStream.write(buffer, 0, bytesRead);
+                    }
                     totalRead += bytesRead;
 
                     long now = System.currentTimeMillis();
@@ -712,13 +755,23 @@ public class AudioService extends Service {
                         long fileSize = getFileSize(fileUri);
                         dataOutputStream.writeLong(fileSize);
 
+                        // End-to-end file transfer encryption using AES-256 CTR
+                        byte[] fileIv = com.example.wifitalkie.util.CryptoUtils.generateRandomIv();
+                        dataOutputStream.writeBoolean(true); // isEncrypted flag
+                        dataOutputStream.write(fileIv);
+
                         byte[] buffer = new byte[16384];
                         int bytesRead;
                         long totalRead = 0;
                         long lastProgressTime = 0;
 
                         while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-                            outputStream.write(buffer, 0, bytesRead);
+                            byte[] cipherChunk = com.example.wifitalkie.util.CryptoUtils.encrypt(buffer, 0, bytesRead, fileIv);
+                            if (cipherChunk != null) {
+                                outputStream.write(cipherChunk);
+                            } else {
+                                outputStream.write(buffer, 0, bytesRead);
+                            }
                             totalRead += bytesRead;
 
                             long now = System.currentTimeMillis();
