@@ -39,3 +39,74 @@ if (!$conn || $conn->connect_error) {
 }
 
 $conn->set_charset("utf8mb4");
+
+/**
+ * Extract Bearer token from request headers or request body
+ */
+function get_bearer_token($explicit_token = null) {
+    if (!empty($explicit_token)) {
+        return trim($explicit_token);
+    }
+
+    $auth_header = '';
+    $headers = function_exists('getallheaders') ? getallheaders() : [];
+    
+    if (isset($headers['Authorization'])) {
+        $auth_header = $headers['Authorization'];
+    } elseif (isset($headers['authorization'])) {
+        $auth_header = $headers['authorization'];
+    } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $auth_header = $_SERVER['HTTP_AUTHORIZATION'];
+    } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+        $auth_header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+    } elseif (function_exists('apache_request_headers')) {
+        $apache_headers = apache_request_headers();
+        if (isset($apache_headers['Authorization'])) {
+            $auth_header = $apache_headers['Authorization'];
+        } elseif (isset($apache_headers['authorization'])) {
+            $auth_header = $apache_headers['authorization'];
+        }
+    }
+
+    if (!empty($auth_header) && preg_match('/Bearer\s+(\S+)/i', $auth_header, $matches)) {
+        return trim($matches[1]);
+    }
+
+    // Fallback: Check POST or GET parameter
+    if (isset($_POST['token']) && !empty($_POST['token'])) {
+        return trim($_POST['token']);
+    }
+    if (isset($_GET['token']) && !empty($_GET['token'])) {
+        return trim($_GET['token']);
+    }
+
+    return null;
+}
+
+/**
+ * Validate session token and return authenticated user row, or null if invalid
+ */
+function get_authenticated_user($conn, $explicit_token = null) {
+    $token = get_bearer_token($explicit_token);
+    if (!$token) {
+        return null;
+    }
+
+    $stmt = $conn->prepare("SELECT id, first_name, last_name, nic, email, dob, role, profile_pic, password, auth_token FROM users WHERE auth_token = ?");
+    if (!$stmt) {
+        return null;
+    }
+    $stmt->bind_param("s", $token);
+    if (!$stmt->execute()) {
+        $stmt->close();
+        return null;
+    }
+    $result = $stmt->get_result();
+    if ($result && $result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $stmt->close();
+        return $user;
+    }
+    $stmt->close();
+    return null;
+}

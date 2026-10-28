@@ -6,21 +6,58 @@ $response = array();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
-    // Check if ID is present
-    if (!isset($_POST['id'])) {
+    // 1. Authenticate caller via session token
+    $caller_token = isset($_POST['token']) ? $_POST['token'] : null;
+    $auth_user = get_authenticated_user($conn, $caller_token);
+
+    if (!$auth_user) {
+        http_response_code(401);
         $response['success'] = false;
-        $response['message'] = "User ID is required";
+        $response['message'] = "Unauthorized: Valid session token is required. Please login.";
         echo json_encode($response);
-        exit;
+        exit();
     }
 
-    $id = $_POST['id'];
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
-    $nic = $_POST['nic'];
-    $dob = $_POST['dob'];
+    // 2. IDOR Prevention: Target user ID
+    // Default to authenticated user's ID if omitted
+    $id = isset($_POST['id']) && !empty($_POST['id']) ? (int)$_POST['id'] : (int)$auth_user['id'];
+
+    // Non-admin callers can ONLY modify their own profile!
+    if (strtoupper($auth_user['role']) !== 'ADMIN' && (int)$auth_user['id'] !== $id) {
+        http_response_code(403);
+        $response['success'] = false;
+        $response['message'] = "Forbidden: Access denied. You can only update your own profile.";
+        echo json_encode($response);
+        exit();
+    }
+
+    $firstName = isset($_POST['firstName']) ? trim($_POST['firstName']) : '';
+    $lastName = isset($_POST['lastName']) ? trim($_POST['lastName']) : '';
+    $nic = isset($_POST['nic']) ? trim($_POST['nic']) : '';
+    $dob = isset($_POST['dob']) ? trim($_POST['dob']) : '';
+    
     // Optional: Update password if provided
-    $password = isset($_POST['password']) ? $_POST['password'] : null;
+    $password = isset($_POST['password']) && !empty($_POST['password']) ? $_POST['password'] : null;
+    $old_password = isset($_POST['old_password']) ? $_POST['old_password'] : (isset($_POST['current_password']) ? $_POST['current_password'] : null);
+
+    // Verify current/old password if provided
+    if ($password && !empty($old_password)) {
+        $pwd_stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
+        if ($pwd_stmt) {
+            $pwd_stmt->bind_param("i", $id);
+            $pwd_stmt->execute();
+            $pwd_stmt->bind_result($db_pwd);
+            $pwd_stmt->fetch();
+            $pwd_stmt->close();
+
+            if (!password_verify($old_password, $db_pwd) && $old_password !== $db_pwd) {
+                $response['success'] = false;
+                $response['message'] = "Current password does not match.";
+                echo json_encode($response);
+                exit();
+            }
+        }
+    }
 
     // Handle File Upload securely
     $profilePicPath = null;

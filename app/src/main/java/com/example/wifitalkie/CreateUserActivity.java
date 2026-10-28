@@ -47,7 +47,7 @@ public class CreateUserActivity extends AppCompatActivity {
                 User newUser = new User(firstName, lastName, nic, email, password, dob, "EMPLOYEE");
 
                 com.example.wifitalkie.network.ApiInterface apiInterface = com.example.wifitalkie.network.ApiClient
-                        .getClient().create(com.example.wifitalkie.network.ApiInterface.class);
+                        .getClient(CreateUserActivity.this).create(com.example.wifitalkie.network.ApiInterface.class);
                 retrofit2.Call<com.google.gson.JsonObject> call = apiInterface.createUser(newUser);
 
                 call.enqueue(new retrofit2.Callback<com.google.gson.JsonObject>() {
