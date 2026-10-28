@@ -627,17 +627,46 @@ public class AudioService extends Service {
         try (InputStream inputStream = socket.getInputStream();
              DataInputStream dataInputStream = new DataInputStream(inputStream)) {
 
-            String fileName = dataInputStream.readUTF();
+            String rawFileName = dataInputStream.readUTF();
             long fileSize = dataInputStream.readLong();
+
+            // 1. Path Traversal Protection: Strip any directory path components & illegal chars
+            String fileName = new File(rawFileName).getName();
+            fileName = fileName.replaceAll("[/\\\\?%*:|\"<>]", "_").trim();
+            if (fileName.isEmpty() || fileName.equals(".") || fileName.equals("..")) {
+                fileName = "received_file_" + System.currentTimeMillis();
+            }
+
             showFileNotification("Receiving: " + fileName);
             broadcastProgress(fileName, 0, "Receiving...");
 
-            File downloadDir = new File(android.os.Environment
-                    .getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "WifiTalkie");
-            if (!downloadDir.exists())
+            // 2. Android 10+ / 11+ / 13+ / 14 Scoped Storage Compatible Directory
+            File downloadDir;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Use app-specific external files dir to avoid Scoped Storage Permission Denied
+                downloadDir = new File(getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS), "WifiTalkie");
+            } else {
+                downloadDir = new File(android.os.Environment
+                        .getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "WifiTalkie");
+            }
+
+            if (!downloadDir.exists()) {
                 downloadDir.mkdirs();
+            }
+            if (!downloadDir.exists()) {
+                downloadDir = new File(getFilesDir(), "WifiTalkie");
+                downloadDir.mkdirs();
+            }
 
             File file = new File(downloadDir, fileName);
+
+            // Canonical Path Traversal check: ensure file cannot escape downloadDir
+            String canonicalDest = downloadDir.getCanonicalPath();
+            String canonicalFile = file.getCanonicalPath();
+            if (!canonicalFile.startsWith(canonicalDest + File.separator)) {
+                throw new SecurityException("Path traversal attempt detected in filename: " + rawFileName);
+            }
+
             try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
                 byte[] buffer = new byte[16384];
                 int bytesRead;
@@ -656,8 +685,9 @@ public class AudioService extends Service {
                     }
                 }
             }
-            broadcastProgress(fileName, 100, "Received in Downloads/WifiTalkie");
-            showFileNotification("Received: " + fileName + " in Downloads/WifiTalkie");
+            String location = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) ? "App Downloads/WifiTalkie" : "Downloads/WifiTalkie";
+            broadcastProgress(fileName, 100, "Received in " + location);
+            showFileNotification("Received: " + fileName + " in " + location);
         } catch (Exception e) {
             Log.e(TAG, "File receive error", e);
             broadcastProgress("File", 0, "Error receiving file: " + e.getMessage());

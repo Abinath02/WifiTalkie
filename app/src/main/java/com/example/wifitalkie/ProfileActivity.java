@@ -32,6 +32,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import android.provider.OpenableColumns;
+import android.util.Log;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -186,7 +190,7 @@ public class ProfileActivity extends AppCompatActivity {
                         new String[] { Manifest.permission.READ_MEDIA_IMAGES }, STORAGE_PERMISSION_CODE);
                 return;
             }
-        } else {
+        } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
@@ -195,9 +199,11 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
 
-        // Intent to pick image
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        // Intent to pick image compatible with Scoped Storage & PhotoPicker
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(Intent.createChooser(intent, "Select Profile Picture"), PICK_IMAGE_REQUEST);
     }
 
     @Override
@@ -251,10 +257,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         MultipartBody.Part body = null;
         if (selectedImageUri != null) {
-            String filePath = getRealPathFromURI(selectedImageUri);
-            if (filePath != null) {
-                File file = new File(filePath);
-                RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            File file = getFileFromUri(selectedImageUri);
+            if (file != null && file.exists()) {
+                String mimeType = getContentResolver().getType(selectedImageUri);
+                if (mimeType == null || !mimeType.startsWith("image/")) {
+                    mimeType = "image/jpeg";
+                }
+                RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), file);
                 body = MultipartBody.Part.createFormData("profile_pic", file.getName(), requestFile);
             }
         }
@@ -288,15 +297,41 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
-    private String getRealPathFromURI(Uri contentUri) {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getContentResolver().query(contentUri, projection, null, null, null);
-        if (cursor == null)
+    /**
+     * Safely copies content URI stream into app cache directory.
+     * Works on all Android versions (including Android 10, 11, 12, 13, 14) without Scoped Storage failures.
+     */
+    private File getFileFromUri(Uri uri) {
+        if (uri == null) return null;
+        try {
+            String fileName = "profile_" + System.currentTimeMillis() + ".jpg";
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (nameIndex != -1) {
+                        String displayName = cursor.getString(nameIndex);
+                        if (displayName != null && !displayName.isEmpty()) {
+                            fileName = new File(displayName).getName();
+                        }
+                    }
+                }
+            } catch (Exception ignored) {}
+
+            File tempFile = new File(getCacheDir(), "upload_" + System.currentTimeMillis() + "_" + fileName);
+            try (InputStream in = getContentResolver().openInputStream(uri);
+                 FileOutputStream out = new FileOutputStream(tempFile)) {
+                if (in == null) return null;
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+                out.flush();
+            }
+            return tempFile;
+        } catch (Exception e) {
+            Log.e("ProfileActivity", "Error copying URI to temp file", e);
             return null;
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
-        return result;
+        }
     }
 }
